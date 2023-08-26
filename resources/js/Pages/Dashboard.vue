@@ -100,20 +100,26 @@
                             <div class="relative overflow-auto shadow-md sm:rounded-lg">
                                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th
-                                                v-for="(column, index) in columns"
-                                                :key="index"
-                                                scope="col"
-                                                class="px-6 py-3"
-                                            >
-                                                <TextInput
-                                                    id="columns"
-                                                    v-model="form.columnNames[index]"
-                                                    class="mt-1 block w-full p-2"
-                                                    required
-                                                />
-                                            </th>
+                                    <tr>
+                                        <th
+                                            scope="row"
+                                            class="px-6 py-4 whitespace-nowrap"
+                                        >
+                                        </th>
+                                        <th
+                                            v-for="(column, index) in columns"
+                                            :key="index"
+                                            scope="col"
+                                            class="px-6 py-4"
+                                        >
+                                            Column {{ index + 1 }}
+                                            <TextInput
+                                                id="columns"
+                                                v-model="form.columnNames[index]"
+                                                class="mt-1 block w-full p-2 mt-2"
+                                                required
+                                            />
+                                        </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,6 +128,12 @@
                                             :key="rowIndex"
                                             class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
                                         >
+                                            <th
+                                                scope="row"
+                                                class="px-6 py-4 whitespace-nowrap"
+                                            >
+                                                Row {{ rowIndex + 1 }}
+                                            </th>
                                             <td
                                                 v-for="(column, columnIndex) in columns"
                                                 :key="columnIndex"
