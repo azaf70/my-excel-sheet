@@ -229,5 +229,11 @@ function buildTable() {
 
 function submitTableData() {
     console.log(form);
+    form
+        .post(route('table-template.store'), {
+            onSuccess: () => {
+                console.log('success');
+            },
+        });
 }
 </script>
