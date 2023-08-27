@@ -141,7 +141,7 @@
                                             >
                                                 <TextInput
                                                     id="columns"
-                                                    v-model="form.rowNames[columnIndex][rowIndex]"
+                                                    v-model="form.rowNames[rowIndex][columnIndex]"
                                                     class="mt-1 block w-full p-2"
                                                     required
                                                 />
@@ -166,14 +166,51 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white align-middle dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        <PrimaryButton
-                            class="float-right mb-6"
-                            @click="openTableBuilder"
-                        >
-                            Create Table
-                        </PrimaryButton>
+                    <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16">
+                        <h2 class="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 lg:text-center dark:text-white md:text-4xl">
+                            <span class="block">Build your next</span>
+                            <span class="inline-block text-green-500">Custom Table</span>
+                            <span class="block">faster</span>
+                        </h2>
+                        <p class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-center lg:text-xl lg:px-64 lg:mb-16">
+                            Here you can build your own custom tables, view them, edit them and delete them.
+                        </p>
+                        <div class="space-y-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 xl:gap-8 sm:space-y-0 md:mt-12 mx-8">
+                            <div @click="openTableBuilder" class="cursor-pointer block px-8 py-12 text-center bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 hover:shadow-lg dark:hover:shadow-lg-light">
+                                <font-awesome-icon
+                                    icon="add"
+                                    class="w-12 h-12 mx-auto text-green-500"
+                                />
+                                <h3 class="font-semibold text-xl text-gray-900 dark:text-white mt-3.5">Create Table</h3>
+                            </div>
+                            <div v-for="(item, index) in tableTemplates" class="cursor-pointer block px-8 py-12 text-center bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 hover:shadow-lg dark:hover:shadow-lg-light">
+                                <font-awesome-icon
+                                    icon="table"
+                                    class="w-12 h-12 mx-auto text-green-500"
+                                />
+
+                                <h3 class="font-semibold text-xl text-gray-900 dark:text-white mt-3.5">{{ index + 1 }}</h3>
+                            </div>
+                        </div>
                     </div>
+<!--                    <div v-for="tableTemplate in tableTemplates" class="relative overflow-x-auto shadow-md sm:rounded-lg">-->
+<!--                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">-->
+<!--                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">-->
+<!--                                <tr>-->
+<!--                                    <th v-for="item in tableTemplate.column_data" scope="col" class="px-6 py-3">-->
+<!--                                        {{item}}-->
+<!--                                    </th>-->
+<!--                                </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                                <tr v-for="rows in tableTemplate.row_data" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">-->
+<!--                                    <td v-for="(item, columnIndex) in rows" :key="columnIndex" class="px-6 py-4 whitespace-nowrap">-->
+<!--                                        {{item}}-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -184,10 +221,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+defineProps({
+    tableTemplates: {
+        type: Array,
+        required: true,
+    },
+});
 
 const isTableOpen = ref(false);
 const newColumns = ref();
@@ -228,11 +272,11 @@ function buildTable() {
 }
 
 function submitTableData() {
-    console.log(form);
     form
         .post(route('table-template.store'), {
             onSuccess: () => {
-                console.log('success');
+                form.reset();
+                isTableOpen.value = false;
             },
         });
 }
